@@ -1,8 +1,24 @@
+[package]
+name = "cfuk"
+version = "0.1.0"
+description = "Solana token for Clusterf*ck United"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "cfuk"
+
 [toolchain]
+anchor_version = "0.28.0"
 
 [features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
 resolution = true
+cpi = ["no-entrypoint"]
 skip-lint = false
+default = []
 
 [programs.localnet]
 cfuk = "Fou1bcLSpMZfbNkjZC6b6qyPRp9477z9knhBHL1i5jSx"
@@ -12,7 +28,7 @@ url = "https://api.apr.dev"
 
 [provider]
 cluster = "Localnet"
-wallet = "~/.config/solana/id.json"
+wallet = "${ANCHOR_WALLET}"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

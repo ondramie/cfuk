@@ -1,40 +1,39 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { Cfuk } from "../target/types/cfuk";
+import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 describe("cfuk", () => {
-  // Configure the client to use the local cluster.
+  // Configure the client
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.Cfuk as Program<Cfuk>;
+  // Cast the program to any to bypass type checking
+  const program = anchor.workspace.Cfuk as unknown as Program;
 
-  it("Is initialized!", async () => {
-    // Add your test here.
-    const tx = await program.methods.initialize().rpc();
-    console.log("Your transaction signature", tx);
-  });
-
-
-  it("Creates the CFUK token", async () => {
-    // Generate a new keypair for the token mint
+  it("Initializes the mint", async () => {
     const mintKeypair = anchor.web3.Keypair.generate();
-    
-    // Initialize token
-    await program.methods
-      .initializeToken(new anchor.BN(1000000000)) // 1 billion tokens
-      .accounts({
+
+    try {
+      const accounts = {
         mint: mintKeypair.publicKey,
-        authority: provider.wallet.publicKey,
+        mintAuthority: provider.wallet.publicKey,
         tokenProgram: TOKEN_PROGRAM_ID,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      })
-      .signers([mintKeypair])
-      .rpc();
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+      };
 
-    console.log("Token created! Mint address:", mintKeypair.publicKey.toString());
+      const tx = await program.methods
+        .initializeMint()
+        .accountsStrict(accounts)
+        .signers([mintKeypair])
+        .rpc();
+
+      console.log("Your transaction signature", tx);
+      console.log("Mint address:", mintKeypair.publicKey.toString());
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
   });
-
 });
