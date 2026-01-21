@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, MintTo, Token, TokenAccount};
 use solana_security_txt::security_txt;
 
-declare_id!("Fou1bcLSpMZfbNkjZC6b6qyPRp9477z9knhBHL1i5jSx");
+declare_id!("9uLDm6eLRFx9MNeNZo2ZjrW9wDtCubWYBSdsVqGPguvJ");
 
 #[cfg(not(feature = "no-entrypoint"))]
 security_txt! {

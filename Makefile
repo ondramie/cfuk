@@ -19,7 +19,16 @@ test: ## Run Anchor tests (spins up local validator automatically)
 test-skip: ## Run tests against existing validator
 	anchor test --skip-local-validator --provider.wallet ./wallets/local.json
 
-clean: ## Clean build artifacts
+clean: ## Clean build artifacts (WARNING: deletes program keypair!)
+	@echo "⚠️  WARNING: This will delete target/deploy/cfuk-keypair.json"
+	@echo "   If you redeploy, your program will get a NEW ID!"
+	@echo ""
+	@if [ -f target/deploy/cfuk-keypair.json ]; then \
+		cp target/deploy/cfuk-keypair.json ./wallets/cfuk-keypair-backup.json && \
+		echo "   Backed up keypair to ./wallets/cfuk-keypair-backup.json"; \
+	fi
+	@echo ""
+	@read -p "Are you sure? [y/N] " confirm && [ "$$confirm" = "y" ] || (echo "Aborted." && exit 1)
 	anchor clean
 	cargo clean --manifest-path programs/cfuk/Cargo.toml
 	rm -rf target/
