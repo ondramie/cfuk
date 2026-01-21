@@ -14,10 +14,10 @@ build: ## Build the Anchor program
 	anchor build
 
 test: ## Run Anchor tests (spins up local validator automatically)
-	anchor test
+	anchor test --provider.wallet ./wallets/local.json
 
 test-skip: ## Run tests against existing validator
-	anchor test --skip-local-validator
+	anchor test --skip-local-validator --provider.wallet ./wallets/local.json
 
 clean: ## Clean build artifacts
 	anchor clean
@@ -38,10 +38,10 @@ check: ## Run cargo check on Rust code
 	cargo check --manifest-path programs/cfuk/Cargo.toml
 
 deploy-local: ## Deploy to local validator
-	anchor deploy
+	@anchor deploy --provider.wallet ./wallets/local.json || (echo "\n⚠️  Local validator not running. Start it with: make validator\n" && exit 1)
 
 deploy-devnet: ## Deploy to devnet
-	npm run dev
+	anchor deploy --provider.cluster devnet --provider.wallet ./wallets/devnet.json
 
 validator: ## Start a local Solana validator
 	solana-test-validator

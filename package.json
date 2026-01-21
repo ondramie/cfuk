@@ -3,10 +3,10 @@
   "scripts": {
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-    "local": "dotenv -e .env.local anchor test",
-    "local:skip": "dotenv -e .env.local anchor test --skip-local-validator",
+    "local": "anchor test --provider.wallet ./wallets/local.json",
+    "local:skip": "anchor test --skip-local-validator --provider.wallet ./wallets/local.json",
     "test:mocha": "dotenv -e .env.local -- ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts",
-    "dev": "dotenv -e .env.devnet anchor deploy"
+    "dev": "anchor deploy --provider.cluster devnet --provider.wallet ./wallets/devnet.json"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
